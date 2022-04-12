@@ -18,10 +18,9 @@ async function getConnection() {
         return pool;
     } catch (error) {
         console.error(error);
-        return {
-            "Codigo Estatus": 4,
-            "mensaje": "No fue posible la conexión"
-        };
+        console.log("fallo la coneccion")
     }
 
 }
+
+module.exports = getConnection();
