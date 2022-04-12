@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get('/pago', pagoController.consultarPago);
 router.post('/pago', pagoController.registrarPago);
+router.put('/pago', pagoController.actualizarPago);
 
 module.exports = router;

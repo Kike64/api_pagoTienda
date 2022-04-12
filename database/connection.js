@@ -1,26 +1,18 @@
-const sql = require('mssql');
+//const sql = require('mssql');
+const Sequelize = require('sequelize');
 
-const dbSettings = {
-    user: 'kike',
-    password: 'contra',
-    server: 'localhost',
-    database: 'Apartado_Central',
-    options: {
-        encrypt: true,
-        trustServerCertificate: true
-    }
-}
+const db = new Sequelize('Apartado_Central', 'kike', 'contra', {
+    host: 'localhost',
+    dialect: 'mssql'
+});
 
-
-async function getConnection() {
+const test = async () => {
     try {
-        const pool = await sql.connect(dbSettings);
-        return pool;
+        await db.authenticate();
+        console.log('Connection has been established successfully.');
     } catch (error) {
-        console.error(error);
-        console.log("fallo la coneccion")
+        console.error('Unable to connect to the database:', error);
     }
+};
 
-}
-
-module.exports = getConnection();
+module.exports = db;
