@@ -1,5 +1,9 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../database/connection');
+
+Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
+    return this._applyTimezone(date, options).format('YYYY-MM-DD HH:mm:ss.SSS');
+};
 
 const Pago = db.define('Bitacora_PagosTiendaWEB', {
     id_cliente: {
@@ -12,12 +16,18 @@ const Pago = db.define('Bitacora_PagosTiendaWEB', {
         type: DataTypes.STRING
     },
     FechaPedido: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        get() {
+            return this.getDataValue('FechaPedido');
+        }
     },
     FechaVencimiento: {
         type: DataTypes.DATE,
         get() {
             return this.getDataValue('FechaVencimiento');
+        },
+        set(value) {
+            this.setDataValue('FechaVencimiento', value);
         }
     },
     MontoPagar: {
@@ -57,6 +67,9 @@ const Pago = db.define('Bitacora_PagosTiendaWEB', {
         type: DataTypes.STRING,
         get() {
             return this.getDataValue('URL');
+        },
+        set(value) {
+            this.setDataValue('URL', value);
         }
     },
     Id_aplicacion: {
