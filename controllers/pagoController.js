@@ -2,6 +2,8 @@ const { Op, Sequelize } = require("sequelize");
 const Pago = require('../models/pago');
 const validarVencimiento = require('../services/validarVencimiento');
 const validarStatus = require('../services/validarStatus');
+const getReferenciaURL = require("../services/requestReferenciaApi");
+
 
 const consultarPago = async (req, res) => {
 
@@ -48,6 +50,8 @@ const registrarPago = async (req, res) => {
 
     try {
         const pago = Pago.build(body);
+        const URL = await getReferenciaURL(pago.referencia);
+        pago.URL = URL;
 
         await pago.save();
 
@@ -57,7 +61,7 @@ const registrarPago = async (req, res) => {
             "fecha vigencia": pago.FechaVencimiento,
             "URL": pago.URL
         });
-    } catch {
+    } catch  {
         res.json({
             "Codigo estatus": "02",
             "Mensaje": "Error en conexion"

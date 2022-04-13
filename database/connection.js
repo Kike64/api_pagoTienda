@@ -1,8 +1,13 @@
-//const sql = require('mssql');
+require('dotenv').config();
 const Sequelize = require('sequelize');
 
-const db = new Sequelize('Apartado_Central', 'kike', 'contra', {
-    host: 'localhost',
+const DATABASE = process.env.DATABASE;
+const USER = process.env.DB_USER;
+const PASS = process.env.DB_PASS;
+const HOST = process.env.DB_HOST;
+
+const db = new Sequelize(DATABASE, USER, PASS, {
+    host: HOST,
     dialect: 'mssql'
 });
 

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../database/connection');
 
@@ -5,7 +6,9 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     return this._applyTimezone(date, options).format('YYYY-MM-DD HH:mm:ss.SSS');
 };
 
-const Pago = db.define('Bitacora_PagosTiendaWEB', {
+const TABLE = process.env.DB_TABLE_PAGO
+
+const Pago = db.define(TABLE, {
     id_cliente: {
         type: DataTypes.STRING
     },
