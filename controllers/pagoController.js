@@ -1,6 +1,7 @@
 const { Op, Sequelize } = require("sequelize");
 const Pago = require('../models/pago');
-const validarVencimiento = require('../helpers/validarVencimiento');
+const validarVencimiento = require('../services/validarVencimiento');
+const validarStatus = require('../services/validarStatus');
 
 const consultarPago = async (req, res) => {
 
@@ -80,68 +81,10 @@ const actualizarPago = async (req, res) => {
         });
 
         if (pago) {
-            switch (pago.status) {
-                case 1:
-                    
-                    await pago.update(body);
+            
+            const result = await validarStatus(pago,body)
+            res.json(result);
 
-                    switch (body.status) {
-                        case 2:
-                            await pago.update(body);
-                            res.json({
-                                "Codigo Estatus": "01",
-                                "Mensaje": "Estatus actualizado a pagado correctamente",
-                                "Monto": pago.MontoPagar
-                            });
-                            break;
-                        case 3:
-                            await pago.update(body);
-                            res.json({
-                                "Codigo Estatus": "01",
-                                "Mensaje": "Estatus actualizado a completado correctamente",
-                                "Monto": pago.MontoPagar
-                            });
-                            break;
-                        case 4:
-                            await pago.update(body);
-                            res.json({
-                                "Codigo Estatus": "01",
-                                "Mensaje": "Estatus actualizado a cancelado correctamente",
-                                "Monto": pago.MontoPagar
-                            });
-                            break;
-                        case 5:
-                            await pago.update(body);
-                            res.json({
-                                "Codigo Estatus": "01",
-                                "Mensaje": "Estatus actualizado a vencido correctamente",
-                                "Monto": pago.MontoPagar
-                            });
-                            break;
-                        default:
-                            res.json({
-                                "mensaje": "Error de actualizacion"
-                            });
-                    }
-                    break;
-
-                case 2:
-                    res.json({
-                        "Codigo Estatus": "02",
-                        "Mensaje": "El estatus ya se encuentra como pagado",
-                        "Monto": pago.MontoPagar
-                    });
-                    break;
-                case 4:
-                    res.json({
-                        "Codigo Estatus": "03",
-                        "Mensaje": "El estatus estaba como cancelado",
-                        "Monto": pago.MontoPagar
-                    });
-                    break;
-                default:
-                    res.json({ "mensaje": `status ${pago.status}` })
-            };
         } else {
             res.json({
                 "Codigo estatus": "04",
