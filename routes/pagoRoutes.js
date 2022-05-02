@@ -1,10 +1,10 @@
 const express = require('express');
-const pagoController = require('../controllers/pagoController');
 const router = express.Router();
+const pagoController = require('../controllers/pagoController');
+const auth = require('../middlewares/auth');
 
-
-router.get('/pago', pagoController.consultarPago);
-router.post('/pago', pagoController.registrarPago);
-router.put('/pago', pagoController.actualizarPago);
+router.get('/pago', auth, pagoController.consultarPago);
+router.post('/pago', auth, pagoController.registrarPago);
+router.put('/pago', auth, pagoController.actualizarPago);
 
 module.exports = router;

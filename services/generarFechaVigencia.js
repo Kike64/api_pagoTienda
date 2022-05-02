@@ -3,8 +3,8 @@ const config = require('../config.json');
 
 const API_URL = config.API_OBTENER_CONFIGURACION;
 const CLAVE = config.CLAVE;
-const USER = config.AUTH_USER;
-const PASS = config.AUTH_PASS;
+const USER = config.API_OBTENER_CONFIGURACION_USER;
+const PASS = config.API_OBTENER_CONFIGURACION_PASS;
 
 const generarFechaVigencia = async (fechaPedido) => {
     fPedido = new Date(fechaPedido + "Z");
