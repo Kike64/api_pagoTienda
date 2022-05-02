@@ -1,11 +1,11 @@
-require('dotenv').config();
 const express = require('express');
 const pagoRoutes = require('./routes/pagoRoutes');
+const config = require('./config.json');
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = config.PORT;
 
-app.set('port', PORT || 3000);
+app.set('port', PORT);
 
 app.use(express.json());
 

@@ -1,10 +1,10 @@
-require('dotenv').config();
 const Sequelize = require('sequelize');
+const config = require('../config.json');
 
-const DATABASE = process.env.DATABASE;
-const USER = process.env.DB_USER;
-const PASS = process.env.DB_PASS;
-const HOST = process.env.DB_HOST;
+const DATABASE = config.DATABASE;
+const USER = config.DB_USER;
+const PASS = config.DB_PASS;
+const HOST = config.DB_HOST;
 
 const db = new Sequelize(DATABASE, USER, PASS, {
     host: HOST,

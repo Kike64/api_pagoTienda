@@ -11,7 +11,7 @@ const validarStatus = async (pago, body) => {
                     await pago.update(body);
 
                     result = {
-                        "Codigo Estatus": "01",
+                        "CodigoEstatus": "01",
                         "Mensaje": "Estatus actualizado a pagado correctamente",
                         "Monto": pago.MontoPagar
                     };
@@ -20,7 +20,7 @@ const validarStatus = async (pago, body) => {
                 case 3:
                     await pago.update(body);
                     result = {
-                        "Codigo Estatus": "01",
+                        "CodigoEstatus": "01",
                         "Mensaje": "Estatus actualizado a completado correctamente",
                         "Monto": pago.MontoPagar
                     };
@@ -28,7 +28,7 @@ const validarStatus = async (pago, body) => {
                 case 4:
                     await pago.update(body);
                     result = {
-                        "Codigo Estatus": "01",
+                        "CodigoEstatus": "01",
                         "Mensaje": "Estatus actualizado a cancelado correctamente",
                         "Monto": pago.MontoPagar
                     };
@@ -36,7 +36,7 @@ const validarStatus = async (pago, body) => {
                 case 5:
                     await pago.update(body);
                     result = {
-                        "Codigo Estatus": "01",
+                        "CodigoEstatus": "01",
                         "Mensaje": "Estatus actualizado a vencido correctamente",
                         "Monto": pago.MontoPagar
                     };
@@ -50,27 +50,25 @@ const validarStatus = async (pago, body) => {
 
         case 2:
             result = {
-                "Codigo Estatus": "02",
+                "CodigoEstatus": "04",
                 "Mensaje": "El estatus ya se encuentra como pagado",
                 "Monto": pago.MontoPagar
             };
             break;
         case 4:
             result = {
-                "Codigo Estatus": "03",
-                "Mensaje": "El estatus estaba como cancelado",
+                "CodigoEstatus": "03",
+                "Mensaje": "El estatus se encuentra cancelado",
                 "Monto": pago.MontoPagar
             };
             break;
         default:
-            result ={ "mensaje": `status ${pago.status}` };
+            result = { "mensaje": `status ${pago.status}` };
     };
 
     return result;
 
 };
-
-
 
 
 

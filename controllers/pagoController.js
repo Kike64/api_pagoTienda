@@ -1,4 +1,4 @@
-const { Op, Sequelize } = require("sequelize");
+const { Op } = require("sequelize");
 const Pago = require('../models/pago');
 const validarVencimiento = require('../services/validarVencimiento');
 const validarStatus = require('../services/validarStatus');
@@ -10,17 +10,22 @@ const consultarPago = async (req, res) => {
 
     const { Referencia, pedido } = req.body;
 
-    if (Referencia && pedido) {
-        try {
-            const pago = await Pago.findOne({
-                attributes: ['MontoPagar', 'URL', 'FechaVencimiento', 'status'],
-                where: {
-                    [Op.or]: [
-                        { referencia: Referencia },
-                        { pedido: pedido }
-                    ]
-                }
-            });
+    try {
+
+        if (Referencia && pedido) {
+            try {
+                const pago = await Pago.findOne({
+                    attributes: ['MontoPagar', 'URL', 'FechaVencimiento', 'status'],
+                    where: {
+                        [Op.or]: [
+                            { referencia: Referencia },
+                            { pedido: pedido }
+                        ]
+                    }
+                });
+            } catch {
+                throw new Error('Error al conectar a la base de datos.', { cause: "06" });
+            }
 
             if (pago) {
 
@@ -28,22 +33,23 @@ const consultarPago = async (req, res) => {
 
             } else {
 
-                res.json({
-                    "Codigo estatus": "05",
-                    "Mensaje": "Referecia no existe"
-                });
+                throw new Error('Referecia No Existe.', { cause: "05" });
             }
-        } catch {
-            res.json({
-                "Codigo estatus": "04",
-                "mensaje": "No fue posible conexión"
-            });
-        }
-    } else {
 
-        res.json({ "mensaje": "Referencia y/o pedido no especificados" });
 
-    };
+        } else {
+
+            throw new Error('Referecia No Existe.', { cause: "05" });
+
+        };
+
+    } catch (e) {
+        res.json({
+            "CodigoEstatus": e.cause,
+            "Mensaje": e.message
+        });
+    }
+
 };
 
 const registrarPago = async (req, res) => {
@@ -56,18 +62,25 @@ const registrarPago = async (req, res) => {
         pago.URL = URL;
         pago.FechaVencimiento = fechaVigencia;
 
-        await pago.save();
+        try {
+            await pago.save();
+        } catch (e) {
+            throw new Error('Error al crear el registro en la base de datos central.', { cause: "06" });
+        }
+
 
         res.json({
-            "Codigo estatus": "01",
+            "CodigoEstatus": "01",
             "Mensaje": "Pago pendiente registrado",
+            "referencia": pago.referencia,
             "fecha vigencia": pago.FechaVencimiento,
             "URL": pago.URL
         });
-    } catch {
+
+    } catch (e) {
         res.json({
-            "Codigo estatus": "02",
-            "Mensaje": "Error en conexion"
+            "CodigoEstatus": e.cause,
+            "Mensaje": e.message
         });
     }
 };
@@ -78,31 +91,37 @@ const actualizarPago = async (req, res) => {
     const { body } = req;
 
     try {
-        const pago = await Pago.findOne({
-            where: {
-                [Op.or]: [
-                    { referencia: body.Referencia },
-                    { pedido: body.pedido }
-                ]
-            }
-        });
+
+        try {
+            const pago = await Pago.findOne({
+                where: {
+                    [Op.or]: [
+                        { referencia: body.Referencia },
+                        { pedido: body.pedido }
+                    ]
+                }
+            });
+
+        } catch {
+            throw new Error('Error al conectar a la base de datos.', { cause: "06" });
+        }
 
         if (pago) {
-
-            const result = await validarStatus(pago, body)
-            res.json(result);
+            try {
+                const result = await validarStatus(pago, body)
+                res.json(result);
+            } catch {
+                throw new Error('Error al conectar a la base de datos.', { cause: "06" });
+            }
 
         } else {
-            res.json({
-                "Codigo estatus": "04",
-                "Mensaje": "No se encontro elemento"
-            });
+            throw new Error('No se encontro elemento.');
         };
 
-    } catch {
+    } catch (e) {
         res.json({
-            "Codigo estatus": "04",
-            "Mensaje": "No fue posible conexión"
+            "CodigoEstatus": e.cause,
+            "Mensaje": e.message
         });
     }
 };
