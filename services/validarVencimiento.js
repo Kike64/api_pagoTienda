@@ -24,16 +24,14 @@ const validarVencimiento = (pago) => {
             case 4:
                 return {
                     "CodigoEstatus": "03",
-                    "Mensaje": "Referencia Cancelada",
-                    "Monto": pago.MontoPagar
+                    "Mensaje": "Referencia Cancelada"
                 };
         };
 
     } else {
         return {
             "CodigoEstatus": "02",
-            "Mensaje": "Referencia Vencida",
-            "Monto": pago.MontoPagar
+            "Mensaje": "Referencia Vencida"
         };
     }
 

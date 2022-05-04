@@ -8,17 +8,21 @@ const generarFechaVigencia = require("../services/generarFechaVigencia");
 
 const consultarPago = async (req, res) => {
 
-    const { Referencia, pedido } = req.body;
+    const { referencia, pedido } = req.headers;
+    console.log(referencia);
+    console.log(pedido);
+
+    var pago;
 
     try {
 
-        if (Referencia && pedido) {
+        if (referencia && pedido) {
             try {
-                const pago = await Pago.findOne({
+                pago = await Pago.findOne({
                     attributes: ['MontoPagar', 'URL', 'FechaVencimiento', 'status'],
                     where: {
                         [Op.or]: [
-                            { referencia: Referencia },
+                            { referencia: referencia },
                             { pedido: pedido }
                         ]
                     }
@@ -87,17 +91,19 @@ const registrarPago = async (req, res) => {
 
 const actualizarPago = async (req, res) => {
 
-
     const { body } = req;
+    var pago;
 
     try {
 
         try {
-            const pago = await Pago.findOne({
+            pago = await Pago.findOne({
+
                 where: {
                     [Op.or]: [
-                        { referencia: body.Referencia },
-                        { pedido: body.pedido }
+
+                        { pedido: body.pedido },
+                        { referencia: body.Referencia }
                     ]
                 }
             });
